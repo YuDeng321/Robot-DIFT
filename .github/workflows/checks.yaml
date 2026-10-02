@@ -1,0 +1,30 @@
+name: Source checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-encoder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install CPU test dependencies
+        run: |
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install pytest 'numpy<2' Pillow
+      - name: Validate public source manifest
+        run: python scripts/release/validate_source_manifest.py
+      - name: Compile Python sources
+        run: python -m compileall -q agents droid_policy_learning environments examples release scripts simulation tests trainers train_droid_auto.py run.py
+      - name: Check inference CLI and encoder contract
+        run: |
+          python examples/extract_features.py --help
+          PYTHONPATH=.:droid_policy_learning python -m pytest -q tests/test_robot_dift_student_feature_extractor.py tests/test_release_metadata_privacy.py tests/test_robot_dift_feature_example.py

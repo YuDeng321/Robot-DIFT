@@ -1,0 +1,343 @@
+{
+  "schema_version": 2,
+  "name": "Robot-DIFT CoRL 2026 paper protocol (Stage I, DROID)",
+  "source": {
+    "document": "1930_Robot_DIFT_Correspondence.pdf",
+    "title": "Robot-DIFT: Correspondence-Sensitive Diffusion Features for Contact-Rich Robot Manipulation",
+    "sections": [
+      "2.1",
+      "2.2",
+      "S4.2",
+      "S4.3",
+      "S4.4",
+      "S5.1",
+      "S5.2.1",
+      "Table S1"
+    ]
+  },
+  "scope": "Stage-I settings stated in the paper, checked against the configuration that train_droid_auto.py resolves for scripts/release/stage1_paper_protocol.sh. A match does not establish checkpoint provenance or downstream results.",
+  "checks": [
+    {
+      "name": "optimizer_steps",
+      "expected": 300000,
+      "path": "train.num_epochs",
+      "source": "Appendix S5.1.3: 300,000 DROID adaptation steps."
+    },
+    {
+      "name": "one_optimizer_step_per_epoch",
+      "expected": 1,
+      "path": "experiment.epoch_every_n_steps",
+      "source": "Implementation: every schedule (LR, lambda, EMA, saves) counts optimizer steps."
+    },
+    {
+      "name": "effective_global_batch",
+      "expected": 256,
+      "derived": "global_batch",
+      "source": "Appendix Table S1: effective global batch 256 (GPUs x per-GPU batch x accumulation)."
+    },
+    {
+      "name": "optimizer",
+      "expected": "adam",
+      "path": "algo.optim_params.policy.optimizer_type",
+      "source": "Appendix Table S1: Adam."
+    },
+    {
+      "name": "learning_rate",
+      "expected": 0.0001,
+      "path": "algo.optim_params.policy.learning_rate.initial",
+      "source": "Appendix Table S1: learning rate 1e-4."
+    },
+    {
+      "name": "student_learning_rate_multiplier",
+      "expected": 1.0,
+      "path": "algo.optim_params.policy.backbone_lr_multiplier",
+      "source": "Appendix Table S1 states a single learning rate (1e-4) for training."
+    },
+    {
+      "name": "readout_learning_rate_multiplier",
+      "expected": 1.0,
+      "path": "algo.optim_params.policy.head_lr_multiplier",
+      "source": "Appendix Table S1 states a single learning rate (1e-4) for training."
+    },
+    {
+      "name": "learning_rate_scheduler",
+      "expected": "linear",
+      "path": "algo.optim_params.policy.learning_rate.scheduler_type",
+      "source": "Appendix Table S1: linear learning-rate scheduler."
+    },
+    {
+      "name": "teacher",
+      "expected": "sd21",
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.sd_version",
+      "source": "Sections 2.1 and S5.1.2: frozen SD2.1 U-Net Teacher."
+    },
+    {
+      "name": "student_initialization",
+      "expected": "sd_teacher",
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.student_init",
+      "source": "Sections 2.1 and S5.1.2: the Student copies the SD2.1 U-Net weights."
+    },
+    {
+      "name": "student_custom_checkpoint",
+      "expected": null,
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.custom_checkpoint",
+      "source": "Sections 2.1 and S5.1.2: Stage I starts from SD2.1, not from another checkpoint."
+    },
+    {
+      "name": "teacher_timesteps_per_view",
+      "expected": 1,
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.num_t_stratification_bins",
+      "source": "Section 2.1: one uniformly sampled timestep per view per iteration."
+    },
+    {
+      "name": "teacher_timestep_lower_inclusive",
+      "expected": 1,
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.t_min",
+      "source": "Section 2.1: t in 1..999."
+    },
+    {
+      "name": "teacher_timestep_upper_exclusive",
+      "expected": 1000,
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.t_max",
+      "source": "Section 2.1: t in 1..999 inclusive; the sampler's upper bound is exclusive."
+    },
+    {
+      "name": "alignment_layers",
+      "expected": [
+        "mid",
+        "us1",
+        "us2",
+        "us3",
+        "us4",
+        "us5",
+        "us6",
+        "us7",
+        "us8",
+        "us9",
+        "us10"
+      ],
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.alignment_feature_keys",
+      "source": "Appendix Figure S1 and S4.2: 11 aligned decoder maps."
+    },
+    {
+      "name": "alignment_layer_reduction",
+      "expected": "sum",
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.alignment_layer_reduction",
+      "source": "Appendix S4.2: uniform sum of (1 - cos) over the 11 maps."
+    },
+    {
+      "name": "alignment_adapters",
+      "expected": true,
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.alignment_apply_feature_adapter",
+      "source": "Training-only timestep-conditioned alignment adapters, dropped at deployment."
+    },
+    {
+      "name": "alignment_initial_weight",
+      "expected": 0.1,
+      "path": "algo.cleandift_alignment_weight",
+      "source": "Section 2.1, Eq. 4: lambda_0 = 0.1."
+    },
+    {
+      "name": "alignment_final_weight",
+      "expected": 0.001,
+      "derived": "alignment_final_weight",
+      "source": "Section 2.1, Eq. 4: lambda_min = 0.001."
+    },
+    {
+      "name": "alignment_decay_steps",
+      "expected": 150000,
+      "path": "algo.cleandift_alignment_warmdown_steps",
+      "source": "Section 2.1, Eq. 4: T_decay = 0.5 x 300000."
+    },
+    {
+      "name": "alignment_decay_power",
+      "expected": 1.0,
+      "path": "algo.cleandift_alignment_decay_power",
+      "source": "Section 2.1, Eq. 4: linear decay."
+    },
+    {
+      "name": "alignment_schedule_clock",
+      "expected": "absolute",
+      "path": "algo.cleandift_alignment_schedule_origin",
+      "source": "Eq. 4 is a function of the training step; absolute keeps it continuous across resume."
+    },
+    {
+      "name": "policy_feature_layers",
+      "expected": [
+        "us3",
+        "us6",
+        "us8"
+      ],
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.feature_key",
+      "source": "Section 2.2 and Appendix Figure S1."
+    },
+    {
+      "name": "readout",
+      "expected": "paper",
+      "path": "algo.robot_dift_readout",
+      "source": "Section 2.2 and Appendix S4.3-S4.4: coarse-to-fine S2-FPN with a CLIP-conditioned readout."
+    },
+    {
+      "name": "observation_horizon",
+      "expected": 2,
+      "path": "algo.horizon.observation_horizon",
+      "source": "Appendix Table S1: observation/prediction/action horizons 2/16/8."
+    },
+    {
+      "name": "prediction_horizon",
+      "expected": 16,
+      "path": "algo.horizon.prediction_horizon",
+      "source": "Appendix Table S1."
+    },
+    {
+      "name": "action_horizon",
+      "expected": 8,
+      "path": "algo.horizon.action_horizon",
+      "source": "Appendix Table S1."
+    },
+    {
+      "name": "action_diffusion_sampler",
+      "expected": true,
+      "path": "algo.ddim.enabled",
+      "source": "Appendix Table S1: DDIM."
+    },
+    {
+      "name": "ema_power",
+      "expected": 0.75,
+      "path": "algo.ema.power",
+      "source": "Appendix Table S1: EMA power 0.75."
+    },
+    {
+      "name": "image_resolution",
+      "expected": [
+        256,
+        256
+      ],
+      "path": "observation.image_dim",
+      "source": "Appendix Table S1 and S5.1.3: 256 x 256."
+    },
+    {
+      "name": "image_augmentation",
+      "expected": null,
+      "path": "observation.encoder.rgb.obs_randomizer_class",
+      "source": "Appendix S5.1.3: no data augmentation."
+    }
+  ],
+  "implementation_choices": {
+    "linear_lr_end_factor": {
+      "value": 0.1,
+      "path": "algo.optim_params.policy.learning_rate.decay_factor",
+      "note": "The paper says linear but not its endpoint."
+    },
+    "ema_inverse_gamma_and_cap": {
+      "value": "inv_gamma 1, no cap",
+      "note": "Matches the Stage-II preset; the paper states only power 0.75."
+    },
+    "vae_posterior": {
+      "value": "mode",
+      "path": "observation.encoder.rgb.core_kwargs.backbone_kwargs.vae_latent_mode",
+      "note": "Posterior mean keeps the deployed Student deterministic."
+    },
+    "cameras": {
+      "value": [
+        "hand_camera_left",
+        "varied_camera_1_left",
+        "varied_camera_2_left"
+      ],
+      "path": "observation.modalities.obs.rgb"
+    },
+    "clip_text_encoder": {
+      "value": "CLIP ViT-B/32",
+      "note": "The paper does not name the CLIP variant; Stage I and Stage II share it."
+    },
+    "readout_dimensions": {
+      "value": "fpn 256, model 256, 8 heads, 1 Transformer layer, MLP 1024-512, output 512",
+      "path": "algo.robot_dift_paper_readout"
+    },
+    "student_timestep": {
+      "value": "learned, initialized at 261 (CleanDIFT)"
+    },
+    "precision": {
+      "value": "bfloat16 autocast, float32 weights",
+      "path": "train.amp_dtype"
+    },
+    "shuffle_buffer_frames_per_rank": {
+      "value": 50000,
+      "path": "train.shuffle_buffer_size"
+    },
+    "action_noise_samples": {
+      "value": 8,
+      "path": "algo.noise_samples"
+    },
+    "gradient_clipping": {
+      "value": 1.0,
+      "path": "train.max_grad_norm"
+    },
+    "student_freeze_steps": {
+      "value": 0,
+      "path": "algo.optim_params.policy.student_freeze_steps",
+      "note": "Optional head-first phase (Student fixed while the readout and policy train); off in the release protocol."
+    },
+    "student_lr_warmup_steps": {
+      "value": 0,
+      "path": "algo.optim_params.policy.student_lr_warmup_steps",
+      "note": "Optional linear Student LR warmup; off in the release protocol."
+    },
+    "rgb_only_policy": {
+      "value": [],
+      "path": "observation.modalities.obs.low_dim",
+      "note": "No proprioception input, so the Student must carry the control signal."
+    },
+    "weight_decay": {
+      "value": 0.0,
+      "path": "algo.optim_params.policy.regularization.L2",
+      "note": "Not specified in the paper; this implementation uses zero."
+    },
+    "student_weight_decay": {
+      "value": 0.0,
+      "path": "algo.optim_params.policy.backbone_weight_decay",
+      "note": "Not specified in the paper; this implementation uses zero."
+    },
+    "readout_weight_decay": {
+      "value": 0.0,
+      "path": "algo.optim_params.policy.head_weight_decay",
+      "note": "Not specified in the paper; this implementation uses zero."
+    },
+    "learning_rate_warmup": {
+      "value": 0,
+      "path": "algo.optim_params.policy.learning_rate.warmup_epochs",
+      "note": "Not specified in the paper; this implementation uses zero."
+    }
+  },
+  "record_only": {
+    "training_gpu_model": {
+      "value": "8 NVIDIA A100",
+      "source": "Appendix S5.1.3"
+    },
+    "stage2_student": {
+      "value": "frozen",
+      "source": "Appendix S5.1.1-S5.1.2"
+    },
+    "stage2_policy": {
+      "value": "1D U-Net diffusion policy; horizons 2/16/8",
+      "source": "Appendix Table S1 and S5.1.1"
+    },
+    "robocasa_evaluation": {
+      "value": "24 tasks; 100 epochs; 50 rollouts per task",
+      "source": "Appendix Table S2 and S5.2.1"
+    },
+    "libero_10_deployment_evaluation": {
+      "value": "50 rollouts per task",
+      "source": "Appendix Table S2 and S5.2.1"
+    },
+    "original_stage1_batch_allocation": {
+      "value": "8 GPUs x batch 32 per GPU x accumulation 1 = 256",
+      "source": "Author-confirmed training configuration; no gradient accumulation."
+    }
+  },
+  "limitations": [
+    "The checks compare the resolved training configuration, not a completed run or checkpoint.",
+    "The S2-FPN/readout operator details the paper leaves open are fixed by agents/encoders/robot_dift_paper_readout.py.",
+    "Section 2.2 describes Student+S2-FPN as a frozen deployment backbone while Appendix S5.1 says Stage II trains the S2-FPN/readout; Stage II here initializes the readout fusion from Stage I and trains it per task."
+  ]
+}

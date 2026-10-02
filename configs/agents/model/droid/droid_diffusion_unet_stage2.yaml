@@ -1,0 +1,24 @@
+_target_: agents.models.droid.diffusion_policy.DroidDiffusionPolicy
+_recursive_: false
+
+action_dim: ${action_dim}
+# The network predicts the full 16-step horizon; BaseAgent executes the first
+# act_seq_len=8 actions before replanning.
+action_seq_len: ${pred_seq_len}
+obs_tokens: ${obs_tokens}
+latent_dim: ${latent_dim}
+goal_dim: ${goal_dim}
+use_goal_cond: ${goal_conditioned}
+
+noise_samples: 1
+scheduler_type: ddpm
+num_train_timesteps: 100
+num_inference_timesteps: ${num_sampling_steps}
+beta_schedule: squaredcos_cap_v2
+clip_sample: true
+prediction_type: epsilon
+
+diffusion_step_embed_dim: 256
+down_dims: [256, 512, 1024]
+kernel_size: 5
+n_groups: 8

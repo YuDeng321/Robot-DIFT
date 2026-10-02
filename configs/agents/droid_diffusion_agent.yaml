@@ -1,0 +1,24 @@
+_target_: agents.droid_diffusion_agent.DroidDiffusionAgent
+_recursive_: false
+
+defaults:
+  - model: droid/droid_diffusion_unet
+  - obs_encoders: cleandift_encoder
+  - language_encoders: clip
+
+optimization:
+  _target_: torch.optim.AdamW
+  lr: 1e-4
+  weight_decay: 0.01
+
+obs_seq_len: ${obs_seq_len}
+act_seq_len: ${act_seq_len}
+
+cam_names: ${camera_names}
+
+if_robot_states: ${if_robot_states}
+if_film_condition: False
+if_dift_language: True
+device: ${device}
+state_dim: ${robot_state_dim}
+latent_dim: ${latent_dim}

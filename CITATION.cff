@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use Robot-DIFT, please cite the paper below."
+title: "Robot-DIFT: Correspondence-Sensitive Diffusion Features for Contact-Rich Robot Manipulation"
+type: software
+license: MIT
+repository-code: "https://github.com/YuDeng321/Robot-DIFT"
+url: "https://arxiv.org/abs/2602.11934"
+authors:
+  - family-names: Deng
+    given-names: Yu
+  - family-names: Jin
+    given-names: Yufeng
+  - family-names: Jia
+    given-names: Xiaogang
+  - family-names: Xue
+    given-names: Jiahong
+  - family-names: Neumann
+    given-names: Gerhard
+  - family-names: Chalvatzaki
+    given-names: Georgia
+preferred-citation:
+  type: conference-paper
+  title: "Robot-DIFT: Correspondence-Sensitive Diffusion Features for Contact-Rich Robot Manipulation"
+  authors:
+    - family-names: Deng
+      given-names: Yu
+    - family-names: Jin
+      given-names: Yufeng
+    - family-names: Jia
+      given-names: Xiaogang
+    - family-names: Xue
+      given-names: Jiahong
+    - family-names: Neumann
+      given-names: Gerhard
+    - family-names: Chalvatzaki
+      given-names: Georgia
+  collection-title: "Conference on Robot Learning (CoRL)"
+  year: 2026
+  url: "https://arxiv.org/abs/2602.11934"

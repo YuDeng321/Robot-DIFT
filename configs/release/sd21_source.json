@@ -1,0 +1,13 @@
+{
+  "role": "frozen SD2.1 initialization and Teacher source for new Robot-DIFT training",
+  "repo_id": "sd2-community/stable-diffusion-2-1-base",
+  "revision": "4e63672c03103b6c636b8fb4119ba982469b2955",
+  "local_relative_to_work": "datasets/robot_dift/pretrained/sd2-1-base",
+  "downloaded_utc_date": "2026-09-23",
+  "weights_sha256": {
+    "unet/diffusion_pytorch_model.safetensors": "6dfae3e5f7d459b50f4b0850ead945972c75bb0e1897628933e169eb43974214",
+    "vae/diffusion_pytorch_model.safetensors": "a1d993488569e928462932c8c38a0760b874d166399b14414135bd9c42df5815",
+    "text_encoder/model.safetensors": "cce6febb0b6d876ee5eb24af35e27e764eb4f9b1d0b7c026c8c3333d4cfc916c"
+  },
+  "note": "This is a newly acquired public SD2.1 source, not a recovered Robot-DIFT submission checkpoint."
+}

@@ -1,0 +1,6 @@
+-r requirements.txt
+tensorflow==2.15.0
+tensorflow-datasets==4.9.2
+tensorflow-graphics==2021.12.3
+tensorflow-probability==0.23.0
+tensorflow-addons==0.23.0

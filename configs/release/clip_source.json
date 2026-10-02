@@ -1,0 +1,8 @@
+{
+  "role": "frozen CLIP ViT-B/32 text tower for the readout queries and the policy language goal (Stage I and Stage II)",
+  "source_url": "https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt",
+  "local_relative_to_work": "datasets/robot_dift/pretrained/clip-vit-b32/ViT-B-32.pt",
+  "downloaded_utc_date": "2026-09-23",
+  "sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af",
+  "note": "Public pretrained CLIP weight; not a Robot-DIFT checkpoint. The manuscript does not identify its CLIP variant."
+}

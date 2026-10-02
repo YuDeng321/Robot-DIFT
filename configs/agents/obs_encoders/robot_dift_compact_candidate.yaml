@@ -1,0 +1,24 @@
+_target_: agents.encoders.robot_dift_candidate_obs_encoder.RobotDIFTCandidateObsEncoder
+_recursive_: false
+
+shape_meta: ${shape_meta}
+resize_shape: [256, 256]
+clip_model_path: ${oc.env:ROBOT_DIFT_CLIP_MODEL}
+feature_keys: [us3, us6, us8]
+output_dim: ${latent_dim}
+fpn_dim: 256
+model_dim: 256
+num_heads: 8
+transformer_layers: 1
+token_pooling: eot_attention
+mlp_hidden_dims: [512, 256]
+pretrained_fusion_checkpoint: ${oc.env:ROBOT_DIFT_STAGE1_FUSION_CHECKPOINT,''}
+feature_cache_max_gib: ${oc.env:ROBOT_DIFT_STAGE2_CACHE_GIB,0}
+
+rgb_model:
+  _target_: agents.encoders.robot_dift_student_feature_extractor.RobotDIFTStudentFeatureExtractor
+  device: ${device}
+  checkpoint_dir: ${oc.env:ROBOT_DIFT_STAGE1_ENCODER}
+  model_repo: ${oc.env:ROBOT_DIFT_MODEL_DIR}
+  feature_keys: [us3, us6, us8]
+  vae_latent_mode: auto

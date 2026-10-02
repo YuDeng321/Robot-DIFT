@@ -1,0 +1,9 @@
+# Frozen raw us3/us6/us8 extraction. Install torch/torchvision separately for
+# your CUDA version; see docs/INSTALLATION.md. No policy or simulator stack.
+numpy>=1.23.5,<2
+diffusers==0.37.0
+transformers==5.4.0
+safetensors==0.7.0
+einops
+jaxtyping
+Pillow

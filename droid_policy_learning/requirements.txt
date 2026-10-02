@@ -1,0 +1,4 @@
+# Install the repository's top-level requirements and a CUDA-matched PyTorch
+# build. The vendored robomimic fork is installed with --no-deps to avoid
+# pulling its historical upstream dependency pins into Robot-DIFT.
+-r ../requirements.txt

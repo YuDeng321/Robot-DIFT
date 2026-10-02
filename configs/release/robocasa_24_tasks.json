@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "dataset_relative_root": "datasets/robot_dift/robocasa/v0.1/single_stage",
+  "tasks": [
+    {"name": "CoffeePressButton", "relative_hdf5": "kitchen_coffee/CoffeePressButton/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "CoffeeServeMug", "relative_hdf5": "kitchen_coffee/CoffeeServeMug/2024-05-01/demo_gentex_im128_randcams.hdf5"},
+    {"name": "CoffeeSetupMug", "relative_hdf5": "kitchen_coffee/CoffeeSetupMug/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "CloseDoubleDoor", "relative_hdf5": "kitchen_doors/CloseDoubleDoor/2024-04-29/demo_gentex_im128_randcams.hdf5"},
+    {"name": "CloseSingleDoor", "relative_hdf5": "kitchen_doors/CloseSingleDoor/2024-04-24/demo_gentex_im128_randcams.hdf5"},
+    {"name": "OpenDoubleDoor", "relative_hdf5": "kitchen_doors/OpenDoubleDoor/2024-04-26/demo_gentex_im128_randcams.hdf5"},
+    {"name": "OpenSingleDoor", "relative_hdf5": "kitchen_doors/OpenSingleDoor/2024-04-24/demo_gentex_im128_randcams.hdf5"},
+    {"name": "CloseDrawer", "relative_hdf5": "kitchen_drawer/CloseDrawer/2024-04-30/demo_gentex_im128_randcams.hdf5"},
+    {"name": "OpenDrawer", "relative_hdf5": "kitchen_drawer/OpenDrawer/2024-05-03/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnOffMicrowave", "relative_hdf5": "kitchen_microwave/TurnOffMicrowave/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnOnMicrowave", "relative_hdf5": "kitchen_microwave/TurnOnMicrowave/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPCabToCounter", "relative_hdf5": "kitchen_pnp/PnPCabToCounter/2024-04-24/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPCounterToCab", "relative_hdf5": "kitchen_pnp/PnPCounterToCab/2024-04-24/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPCounterToMicrowave", "relative_hdf5": "kitchen_pnp/PnPCounterToMicrowave/2024-04-27/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPCounterToSink", "relative_hdf5": "kitchen_pnp/PnPCounterToSink/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPCounterToStove", "relative_hdf5": "kitchen_pnp/PnPCounterToStove/2024-04-26/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPMicrowaveToCounter", "relative_hdf5": "kitchen_pnp/PnPMicrowaveToCounter/2024-04-26/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPSinkToCounter", "relative_hdf5": "kitchen_pnp/PnPSinkToCounter/2024-04-26_2/demo_gentex_im128_randcams.hdf5"},
+    {"name": "PnPStoveToCounter", "relative_hdf5": "kitchen_pnp/PnPStoveToCounter/2024-05-01/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnOffSinkFaucet", "relative_hdf5": "kitchen_sink/TurnOffSinkFaucet/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnOnSinkFaucet", "relative_hdf5": "kitchen_sink/TurnOnSinkFaucet/2024-04-25/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnSinkSpout", "relative_hdf5": "kitchen_sink/TurnSinkSpout/2024-04-29/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnOffStove", "relative_hdf5": "kitchen_stove/TurnOffStove/2024-05-02/demo_gentex_im128_randcams.hdf5"},
+    {"name": "TurnOnStove", "relative_hdf5": "kitchen_stove/TurnOnStove/2024-05-02/demo_gentex_im128_randcams.hdf5"}
+  ]
+}

@@ -1,0 +1,218 @@
+defaults:
+  - agents: bc_agent
+  - trainers: base_trainer
+  - _self_
+
+agent_name: beso
+log_dir: ${oc.env:WORK}/logs/
+
+# insert wandb here
+wandb:
+  entity: ${oc.env:WANDB_ENTITY,null}
+  project: robot_dift_robocasa
+
+group: bc_robocasa
+
+hydra:
+  mode: MULTIRUN # needed for launcher to be used
+  run:
+    dir: ${log_dir}/runs/${agent_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: True
+    config:
+      override_dirname:
+        exclude_keys:
+          - env_name
+  sweep:
+    dir: ${log_dir}/sweeps/${agent_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.override_dirname}
+env_name:
+# # Pick and place
+#   - PickPlaceCounterToCabinet
+#   - PickPlaceCabinetToCounter
+#   - PickPlaceCounterToSink
+#   - PickPlaceSinkToCounter
+#   - PickPlaceCounterToMicrowave
+#   - PickPlaceMicrowaveToCounter
+#   - PickPlaceCounterToStove
+#   - PickPlaceStoveToCounter
+# # Opening and closing doors
+#   - OpenSingleDoor
+#   - CloseSingleDoor
+#   - OpenDoubleDoor
+#   - CloseDoubleDoor
+# # Opening and closing drawers
+#   - OpenDrawer
+#   - CloseDrawer
+# # Twisting knobs
+#   - TurnOnStove
+#   - TurnOffStove
+# # Turning levers
+#   - TurnOnSinkFaucet
+#   - TurnOffSinkFaucet
+#   - TurnSinkSpout
+# Pressing buttons
+  - CoffeePressButton
+  # - TurnOnMicrowave
+  # - TurnOffMicrowave
+seed: 42
+
+dataset_path: ${oc.env:WORK}/datasets/robot_dift/robocasa/v0.1/single_stage/
+
+# Model Setting
+window_size: ${add:${obs_seq_len},${pred_seq_len},-1}
+obs_seq_len: 1
+act_seq_len: 10
+pred_seq_len: 10
+multistep: ${window_size} # only for inference, could be different from act_seq_len
+goal_window_size: 1
+
+goal_conditioned: True
+
+# Training
+train_batch_size: 16
+val_batch_size: 1
+gradient_accumulation_steps: 1
+num_workers: 0
+device: "cuda"
+epoch: 100
+eval_every_n_epochs: 1
+sim_eval_every_n_epochs: 125
+scale_data: True
+scaler_type: "standard"
+
+use_pos_emb: True
+num_sampling_steps: 4
+if_use_ema: True
+
+## Environment
+obs_dim: 30
+robot_state_dim: 30  # 1 gripper + 1 gripper vel + 7 joint pos + 7 joint vel + 3 eef pos + 4 quat + 7 prev action
+action_dim: 7
+max_len_data: 260
+global_action: False
+
+alignment_cfg: ${oc.select:agents.obs_encoders.alignment_cfg,null}
+
+## Observations
+if_robot_states: False
+obs_tokens: 3
+img_width: 128
+img_height: 128
+
+camera_names:
+#  - "robot0_agentview_center"
+  - "robot0_agentview_left"
+  - "robot0_agentview_right"
+  - "robot0_eye_in_hand"
+
+shape_meta:
+  # acceptable types: rgb, low_dim
+  obs:
+#    robot0_agentview_center_image:
+#      shape:
+#        - 3
+#        - ${img_height}
+#        - ${img_width}
+#      type: rgb
+    robot0_agentview_left_image:
+      shape:
+        - 3
+        - ${img_height}
+        - ${img_width}
+      type: rgb
+    robot0_agentview_right_image:
+      shape:
+        - 3
+        - ${img_height}
+        - ${img_width}
+      type: rgb
+    robot0_eye_in_hand_image:
+      shape:
+        - 3
+        - ${img_height}
+        - ${img_width}
+      type: rgb
+##########################################################################################
+# Common Parameters
+##########################################################################################
+n_embd: 256
+goal_dim: 512
+latent_dim: 512
+
+##########################################################################################
+# Transformer Parameters (encoder-decoder)
+##########################################################################################
+encoder_n_layer: 4
+decoder_n_layer: 6
+n_heads: 4
+
+##########################################################################################
+# Mamba Parameters
+##########################################################################################
+Mamba_type: Mamba1
+
+mamba_n_layer_encoder: 4
+mamba_encoder_cfg:
+  layer: ${Mamba_type}
+  d_state: 64
+  d_conv: 4
+  expand: 2
+
+mamba_n_layer_decoder: 8
+mamba_decoder_cfg:
+  layer: ${Mamba_type}
+  d_state: 64
+  d_conv: 4
+  expand: 2
+
+##########################################################################################
+# xLSTM Parameters
+##########################################################################################
+xlstm_encoder_blocks: 16
+xlstm_decoder_blocks: 16
+
+trainset:
+  _target_: environments.dataset.robocasa_dataset_memory.RobocasaDataset
+  data_directory: ${dataset_path}
+  env_name: ${env_name}
+  obs_seq_len: ${obs_seq_len}
+  obs_dim: ${obs_dim}
+  action_dim: ${action_dim}
+  cam_names: ${camera_names}
+  device: ${device}
+  max_len_data: ${max_len_data}
+  window_size: ${window_size}
+  global_action: ${global_action}
+
+valset:
+  _target_: environments.dataset.robocasa_dataset_memory.RobocasaDataset
+  data_directory: ${dataset_path}
+  env_name: ${env_name}
+  obs_seq_len: ${obs_seq_len}
+  obs_dim: ${obs_dim}
+  action_dim: ${action_dim}
+  cam_names: ${camera_names}
+  device: ${device}
+  max_len_data: ${max_len_data}
+  window_size: ${window_size}
+  global_action: ${global_action}
+
+simulation:
+  _target_: simulation.robocasa_sim.RoboCasaSim
+  env_name: ${env_name}
+  camera_names: ${camera_names}
+  seed: ${seed}
+  start_episode: 0
+  layout_ids: null
+  style_ids: null
+  obj_instance_split: null
+  device: ${device}
+  img_height: ${img_height}
+  img_width: ${img_width}
+  num_episode: 50
+  max_step_per_episode: 720
+  render: False
+  n_cores: 1
+  if_vision: False
+  global_action: ${global_action}

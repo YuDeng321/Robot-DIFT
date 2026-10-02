@@ -1,0 +1,33 @@
+_target_: trainers.base_trainer.BaseTrainer
+_recursive_: false
+
+obs_seq_len: ${obs_seq_len}
+
+trainset: ${trainset}
+valset: ${valset}
+
+train_batch_size: ${train_batch_size}
+val_batch_size: ${val_batch_size}
+num_workers: ${num_workers}
+epoch: ${epoch}
+device: ${device}
+scale_data: ${scale_data}
+scaler_type: ${scaler_type}
+eval_every_n_epochs: ${eval_every_n_epochs}
+sim_eval_every_n_epochs: ${sim_eval_every_n_epochs}
+simulation_cfg: ${simulation}
+alignment_cfg: ${alignment_cfg}
+gradient_accumulation_steps: ${oc.select:gradient_accumulation_steps,1}
+accumulate_steps: ${oc.select:accumulate_steps,null}
+full_accumulation_batches: ${oc.select:full_accumulation_batches,false}
+max_train_batches_per_epoch: ${oc.select:max_train_batches_per_epoch,null}
+lr_scheduler_type: ${oc.select:lr_scheduler_type,null}
+linear_lr_end_factor: ${oc.select:linear_lr_end_factor,0.1}
+
+decay_ema: 0.995
+ema_power: ${oc.select:ema_power,null}
+if_use_ema: ${if_use_ema}
+
+# Visualization settings
+viz_interval: ${oc.select:viz_interval,10}
+num_viz_samples: ${oc.select:num_viz_samples,5}

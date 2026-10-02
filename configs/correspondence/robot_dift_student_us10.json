@@ -1,0 +1,18 @@
+{
+  "name": "robot-dift-student-us10",
+  "target": "agents.encoders.robot_dift_student_feature_extractor.RobotDIFTStudentFeatureExtractor",
+  "kwargs": {
+    "checkpoint_dir": "${checkpoint}",
+    "model_repo": "${model_repo}",
+    "device": "${device}",
+    "feature_keys": ["us10"],
+    "vae_latent_mode": "auto"
+  },
+  "method": "cleandift_map",
+  "feature_key": "us10",
+  "language": "",
+  "resize": [256, 256],
+  "normalization": "dift",
+  "expected_feature_size": [32, 32],
+  "requires_checkpoint": true
+}

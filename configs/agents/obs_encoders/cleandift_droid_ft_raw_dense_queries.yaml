@@ -1,0 +1,39 @@
+_recursive_: false
+_target_: agents.encoders.multi_image_obs_encoder.MultiImageObsEncoder
+
+alignment_cfg:
+  freq: 1
+  freq_drop_ratio: 1
+  freq_min: 1
+  loss_type: cossim
+  min_decay_factor: 0.01
+  warmdown_frac: 0.5
+  weight: 0.1
+alignment_views: all
+imagenet_norm: false
+resize_shape: [256, 256]
+
+rgb_model:
+  _target_: agents.encoders.cleandift_img_encoder.CleanDIFTImgEncoder
+  alignment_cfg: ${..alignment_cfg}
+  device: ${device}
+  feature_key: [us3, us6, us8]
+  freeze_backbone: true
+  map_out_dim: ${latent_dim}
+  sd_version: sd21
+  use_fp32: false
+  use_text_condition: true
+  fpn_dim: 256
+  fpn_num_queries: 8
+  # RoboCasa contact transfer is sensitive to query-readout dropout. The
+  # validated Robot-DIFT raw-dense protocol uses no dropout in this head.
+  fpn_dropout: 0.0
+  custom_checkpoint: ${oc.env:ROBOT_DIFT_CLEANDIFT_DROID_FT_CKPT}
+  load_full_encoder_checkpoint: false
+  apply_feature_adapter: false
+  output_mode: queries
+
+shape_meta: ${shape_meta}
+share_rgb_model: true
+use_dift: true
+use_group_norm: true
